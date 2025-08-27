@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Dancing CatDog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e48aa, #9d50bb);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: #ff9a00;
+            text-shadow: 3px 3px 0 #ff5e9a, 6px 6px 0 #000;
+            margin-bottom: 10px;
+            animation: titleGlow 2s infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 3px 3px 0 #ff5e9a, 6px 6px 0 #000; }
+            100% { text-shadow: 3px 3px 20px #ff5e9a, 6px 6px 20px #000; }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #4ecdc4;
+            margin-bottom: 30px;
+        }
+        
+        .dance-floor {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #ff9a00;
+            box-shadow: 0 0 25px rgba(255, 154, 0, 0.5);
+        }
+        
+        .dance-floor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.1) 50%),
+                linear-gradient(transparent 50%, rgba(255,255,255,0.1) 50%);
+            background-size: 50px 50px;
+            z-index: 0;
+            border-radius: 15px;
+        }
+        
+        .catdog-container {
+            position: relative;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .catdog {
+            width: 150px;
+            height: 200px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+        
+        .head {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(to right, #ff6b6b 50%, #4ecdc4 50%);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            z-index: 3;
+            transition: all 0.3s;
+        }
+        
+        .ear {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            border-radius: 20px 20px 0 0;
+            top: -30px;
+            z-index: 1;
+            transition: transform 0.2s;
+        }
+        
+        .ear.left {
+            left: 10px;
+            background: #ff6b6b;
+            transform: rotate(-20deg);
+        }
+        
+        .ear.right {
+            right: 10px;
+            background: #4ecdc4;
+            transform: rotate(20deg);
+        }
+        
+        .eye {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #fff;
+            border-radius: 50%;
+            top: 40px;
+            transition: transform 0.2s;
+        }
+        
+        .eye.left {
+            left: 25px;
+        }
+        
+        .eye.right {
+            right: 25px;
+        }
+        
+        .pupil {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #000;
+            border-radius: 50%;
+            top: 6px;
+            left: 6px;
+            transition: transform 0.2s;
+        }
+        
+        .nose {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background: #ff5252;
+            border-radius: 50%;
+            bottom: 25px;
+            left: 45px;
+            transition: transform 0.2s;
+        }
+        
+        .mouth {
+            position: absolute;
+            width: 30px;
+            height: 10px;
+            background: #000;
+            border-radius: 0 0 10px 10px;
+            bottom: 15px;
+            left: 45px;
+            transition: all 0.2s;
+        }
+        
+        .body {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(to right, #ff6b6b 50%, #4ecdc4 50%);
+            border-radius: 40% 40% 20% 20%;
+            margin: -10px auto 0;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+        
+        .leg {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(to right, #ff6b6b 50%, #4ecdc4 50%);
+            border-radius: 10px;
+            bottom: -30px;
+            z-index: 1;
+            transition: transform 0.2s;
+        }
+        
+        .leg.front-left {
+            left: 20px;
+            background: #ff6b6b;
+        }
+        
+        .leg.front-right {
+            left: 60px;
+            background: #4ecdc4;
+        }
+        
+        .leg.back-left {
+            left: 40px;
+            background: #ff6b6b;
+        }
+        
+        .leg.back-right {
+            left: 80px;
+            background: #4ecdc4;
+        }
+        
+        .tail {
+            position: absolute;
+            width: 15px;
+            height: 60px;
+            background: linear-gradient(to top, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            bottom: -20px;
+            right: -15px;
+            transform-origin: center bottom;
+            z-index: 1;
+            transition: transform 0.2s;
+        }
+        
+        /* Animation classes */
+        .dancing .head {
+            animation: danceHead 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dancing .body {
+            animation: danceBody 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dancing .leg {
+            animation: danceLeg 0.3s ease-in-out infinite alternate;
+        }
+        
+        .dancing .tail {
+            animation: danceTail 0.4s ease-in-out infinite alternate;
+        }
+        
+        /* Dance style 2 */
+        .dance-style2 .head {
+            animation: danceHead2 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dance-style2 .body {
+            animation: danceBody2 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dance-style2 .leg {
+            animation: danceLeg2 0.3s ease-in-out infinite alternate;
+        }
+        
+        .dance-style2 .tail {
+            animation: danceTail2 0.4s ease-in-out infinite alternate;
+        }
+        
+        /* Dance style 3 */
+        .dance-style3 .head {
+            animation: danceHead3 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dance-style3 .body {
+            animation: danceBody3 0.5s ease-in-out infinite alternate;
+        }
+        
+        .dance-style3 .leg {
+            animation: danceLeg3 0.3s ease-in-out infinite alternate;
+        }
+        
+        .dance-style3 .tail {
+            animation: danceTail3 0.4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes danceHead {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        
+        @keyframes danceBody {
+            0% { transform: translateY(-10px) rotate(-3deg); }
+            100% { transform: translateY(10px) rotate(3deg); }
+        }
+        
+        @keyframes danceLeg {
+            0% { height: 40px; }
+            100% { height: 30px; }
+        }
+        
+        @keyframes danceTail {
+            0% { transform: rotate(-20deg); }
+            100% { transform: rotate(20deg); }
+        }
+        
+        /* Style 2 animations */
+        @keyframes danceHead2 {
+            0% { transform: translateX(-10px) rotate(-8deg); }
+            100% { transform: translateX(10px) rotate(8deg); }
+        }
+        
+        @keyframes danceBody2 {
+            0% { transform: translateY(-15px) rotate(-8deg); }
+            100% { transform: translateY(15px) rotate(8deg); }
+        }
+        
+        @keyframes danceLeg2 {
+            0% { height: 40px; transform: rotate(-5deg); }
+            100% { height: 25px; transform: rotate(5deg); }
+        }
+        
+        @keyframes danceTail2 {
+            0% { transform: rotate(-30deg) scaleY(1.2); }
+            100% { transform: rotate(30deg) scaleY(0.8); }
+        }
+        
+        /* Style 3 animations */
+        @keyframes danceHead3 {
+            0% { transform: translateY(-15px) rotate(-10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(15px) rotate(10deg); }
+        }
+        
+        @keyframes danceBody3 {
+            0% { transform: translateX(-20px) rotate(-10deg) scale(1); }
+            50% { transform: translateX(0) rotate(0deg) scale(1.1); }
+            100% { transform: translateX(20px) rotate(10deg) scale(1); }
+        }
+        
+        @keyframes danceLeg3 {
+            0% { height: 40px; transform: rotate(-10deg); }
+            50% { height: 20px; transform: rotate(0deg); }
+            100% { height: 40px; transform: rotate(10deg); }
+        }
+        
+        @keyframes danceTail3 {
+            0% { transform: rotate(-45deg) scaleY(1.5); }
+            50% { transform: rotate(0deg) scaleY(1); }
+            100% { transform: rotate(45deg) scaleY(1.5); }
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .control-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-title {
+            font-size: 1.2rem;
+            color: #ff9a00;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: #ff9a00;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid #000;
+            margin: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            background: #ffaa30;
+            transform: scale(1.05);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn.active {
+            background: #4ecdc4;
+            color: #000;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(30, 30);
+                opacity: 0;
+            }
+        }
+        
+        .slider-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 10px;
+            background: #4ecdc4;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .slider:hover {
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.8);
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff9a00;
+            cursor: pointer;
+            border: 2px solid #000;
+            transition: all 0.3s;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(255, 154, 0, 0.8);
+        }
+        
+        .slider-value {
+            font-weight: bold;
+            color: #ff9a00;
+            margin-top: 5px;
+        }
+        
+        .sound-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .sound-title {
+            font-size: 1.5rem;
+            color: #ff9a00;
+            margin: 10px 0;
+        }
+        
+        .sound-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .sound-btn {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .sound-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100px;
+            gap: 3px;
+            margin: 15px 0;
+            width: 100%;
+        }
+        
+        .visualizer-bar {
+            width: 10px;
+            background: #ff9a00;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.1s ease;
+        }
+        
+        .volume-control {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .disco-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .disco-light {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(20px);
+            animation: discoMove 10s linear infinite;
+        }
+        
+        .light1 {
+            background: #ff5e9a;
+            top: 10%;
+            left: 20%;
+            animation-duration: 15s;
+        }
+        
+        .light2 {
+            background: #4ecdc4;
+            top: 60%;
+            left: 70%;
+            animation-duration: 12s;
+            animation-delay: 1s;
+        }
+        
+        .light3 {
+            background: #ff9a00;
+            top: 30%;
+            left: 50%;
+            animation-duration: 18s;
+            animation-delay: 2s;
+        }
+        
+        @keyframes discoMove {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, 50px) scale(1.5); }
+            50% { transform: translate(50px, 100px) scale(0.8); }
+            75% { transform: translate(-50px, 80px) scale(1.2); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        
+        .dance-stats {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            transition: all 0.3s;
+        }
+        
+        .dance-stats:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat:hover {
+            transform: scale(1.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            color: #ff9a00;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #4ecdc4;
+        }
+        
+        .special-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .feature-btn {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: #000;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .voice-control {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            width: 100%;
+        }
+        
+        .voice-status {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #ff9a00;
+            min-height: 30px;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ultimate Dancing CatDog</h1>
+            <p class="subtitle">Now with extraordinary features!</p>
+        </header>
+        
+        <div class="dance-floor">
+            <div class="disco-effects">
+                <div class="disco-light light1"></div>
+                <div class="disco-light light2"></div>
+                <div class="disco-light light3"></div>
+            </div>
+            
+            <div class="catdog-container">
+                <div class="catdog dancing">
+                    <div class="head">
+                        <div class="ear left"></div>
+                        <div class="ear right"></div>
+                        <div class="eye left">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye right">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="nose"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="body">
+                        <div class="leg front-left"></div>
+                        <div class="leg front-right"></div>
+                        <div class="leg back-left"></div>
+                        <div class="leg back-right"></div>
+                        <div class="tail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-title">Dance Speed</div>
+                <div class="slider-container">
+                    <input type="range" min="1" max="10" value="5" class="slider" id="speedSlider">
+                    <div class="slider-value">Speed: <span id="speedValue">5</span>/10</div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">Dance Style</div>
+                <button class="btn active" id="style1">Style 1</button>
+                <button class="btn" id="style2">Style 2</button>
+                <button class="btn" id="style3">Style 3</button>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">Sound Effects</div>
+                <div class="sound-controls">
+                    <div class="sound-buttons">
+                        <button class="sound-btn" id="meowBtn">😺 Meow</button>
+                        <button class="sound-btn" id="barkBtn">🐶 Bark</button>
+                        <button class="sound-btn" id="danceBtn">💃 Dance</button>
+                        <button class="sound-btn" id="partyBtn">🎉 Party</button>
+                    </div>
+                    
+                    <div class="volume-control">
+                        <div class="control-title">Volume</div>
+                        <input type="range" min="0" max="1" step="0.1" value="0.7" class="slider" id="volumeSlider">
+                    </div>
+                    
+                    <div class="sound-title" id="nowPlaying">Press a sound button!</div>
+                    <div class="visualizer" id="visualizer">
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                        <div class="visualizer-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="special-features">
+            <button class="feature-btn" id="rainbowBtn">🌈 Rainbow Mode</button>
+            <button class="feature-btn" id="morphBtn">🌀 Morph Shape</button>
+            <button class="feature-btn" id="confettiBtn">🎊 Confetti Blast</button>
+            <button class="feature-btn" id="voiceBtn">🎤 Voice Control</button>
+            <button class="feature-btn" id="recordBtn">📀 Record Dance</button>
+        </div>
+        
+        <div class="voice-control" id="voiceControl" style="display: none;">
+            <div class="control-title">Voice Commands</div>
+            <p>Try saying: "dance faster", "dance slower", "change style", "meow", "bark", "party time"</p>
+            <button class="btn" id="startVoice">Start Voice Control</button>
+            <div class="voice-status" id="voiceStatus">Voice control: Off</div>
+        </div>
+        
+        <div class="dance-stats">
+            <div class="stat">
+                <div class="stat-value" id="danceCount">0</div>
+                <div class="stat-label">Dance Moves</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="speedLevel">5</div>
+                <div class="stat-label">Speed Level</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="energy">100%</div>
+                <div class="stat-label">Energy</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="specialPoints">0</div>
+                <div class="stat-label">Special Points</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Made with ❤️ for all CatDog fans | Now with extraordinary features!</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const catdog = document.querySelector('.catdog');
+            const speedSlider = document.getElementById('speedSlider');
+            const speedValue = document.getElementById('speedValue');
+            const speedLevelElem = document.getElementById('speedLevel');
+            const style1Btn = document.getElementById('style1');
+            const style2Btn = document.getElementById('style2');
+            const style3Btn = document.getElementById('style3');
+            const meowBtn = document.getElementById('meowBtn');
+            const barkBtn = document.getElementById('barkBtn');
+            const danceBtn = document.getElementById('danceBtn');
+            const partyBtn = document.getElementById('partyBtn');
+            const nowPlaying = document.getElementById('nowPlaying');
+            const danceCountElem = document.getElementById('danceCount');
+            const energyElem = document.getElementById('energy');
+            const specialPointsElem = document.getElementById('specialPoints');
+            const visualizerBars = document.querySelectorAll('.visualizer-bar');
+            const volumeSlider = document.getElementById('volumeSlider');
+            
+            // Special feature buttons
+            const rainbowBtn = document.getElementById('rainbowBtn');
+            const morphBtn = document.getElementById('morphBtn');
+            const confettiBtn = document.getElementById('confettiBtn');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const recordBtn = document.getElementById('recordBtn');
+            const voiceControl = document.getElementById('voiceControl');
+            const startVoiceBtn = document.getElementById('startVoice');
+            const voiceStatus = document.getElementById('voiceStatus');
+            
+            // Audio context for generating sounds
+            let audioContext;
+            let globalVolume = 0.7;
+            
+            let danceCount = 0;
+            let speedLevel = 5;
+            let energy = 100;
+            let specialPoints = 0;
+            let visualizerInterval;
+            let currentStyle = 'style1';
+            let isRainbowMode = false;
+            let isVoiceActive = false;
+            let recognition;
+            
+            // Initialize
+            updateStats();
+            initAudio();
+            initVoiceRecognition();
+            
+            // Initialize Web Audio API
+            function initAudio() {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log("Audio context created successfully");
+                } catch (e) {
+                    console.error("Web Audio API is not supported in this browser", e);
+                    nowPlaying.textContent = "Audio not supported in your browser";
+                }
+            }
+            
+            // Initialize voice recognition
+            function initVoiceRecognition() {
+                try {
+                    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.lang = 'en-US';
+                    
+                    recognition.onresult = function(event) {
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                const transcript = event.results[i][0].transcript.toLowerCase().trim();
+                                processVoiceCommand(transcript);
+                            }
+                        }
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error', event.error);
+                        voiceStatus.textContent = `Error: ${event.error}`;
+                    };
+                    
+                } catch (e) {
+                    console.error("Speech recognition not supported", e);
+                    voiceBtn.disabled = true;
+                    voiceBtn.title = "Voice recognition not supported in your browser";
+                }
+            }
+            
+            // Process voice commands
+            function processVoiceCommand(command) {
+                voiceStatus.textContent = `Heard: "${command}"`;
+                
+                if (command.includes('faster')) {
+                    speedSlider.value = Math.min(10, parseInt(speedSlider.value) + 2);
+                    speedSlider.dispatchEvent(new Event('input'));
+                    voiceStatus.textContent = "Speed increased!";
+                }
+                else if (command.includes('slower')) {
+                    speedSlider.value = Math.max(1, parseInt(speedSlider.value) - 2);
+                    speedSlider.dispatchEvent(new Event('input'));
+                    voiceStatus.textContent = "Speed decreased!";
+                }
+                else if (command.includes('change style')) {
+                    const styles = ['style1', 'style2', 'style3'];
+                    const currentIndex = styles.indexOf(currentStyle);
+                    const nextStyle = styles[(currentIndex + 1) % styles.length];
+                    
+                    if (nextStyle === 'style1') style1Btn.click();
+                    else if (nextStyle === 'style2') style2Btn.click();
+                    else if (nextStyle === 'style3') style3Btn.click();
+                    
+                    voiceStatus.textContent = "Style changed!";
+                }
+                else if (command.includes('meow')) {
+                    meowBtn.click();
+                    voiceStatus.textContent = "Meow!";
+                }
+                else if (command.includes('bark')) {
+                    barkBtn.click();
+                    voiceStatus.textContent = "Bark!";
+                }
+                else if (command.includes('party')) {
+                    partyBtn.click();
+                    voiceStatus.textContent = "Party time!";
+                }
+            }
+            
+            // Set volume from slider
+            function setVolume() {
+                globalVolume = volumeSlider.value;
+            }
+            
+            volumeSlider.addEventListener('input', setVolume);
+            
+            // Sound generation functions
+            function playTone(frequency, duration, type = 'sine', vibrato = false) {
+                if (!audioContext) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                
+                if (vibrato) {
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                    const vibrato = oscillator.frequency;
+                    vibrato.setValueAtTime(frequency, audioContext.currentTime);
+                    vibrato.linearRampToValueAtTime(frequency * 1.1, audioContext.currentTime + duration/2);
+                    vibrato.linearRampToValueAtTime(frequency, audioContext.currentTime + duration);
+                }
+                
+                gainNode.gain.setValueAtTime(globalVolume, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+            
+            function playMeow() {
+                // Cat meow sound
+                playTone(300, 0.2, 'sawtooth');
+                setTimeout(() => playTone(200, 0.3, 'sawtooth'), 200);
+                setTimeout(() => playTone(250, 0.15, 'sawtooth'), 500);
+            }
+            
+            function playBark() {
+                // Dog bark sound
+                playTone(100, 0.1, 'square');
+                setTimeout(() => playTone(80, 0.2, 'square'), 100);
+            }
+            
+            function playDance() {
+                // Dance beat sound
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => playTone(100 + i*50, 0.1, 'square'), i * 200);
+                }
+            }
+            
+            function playParty() {
+                // Party sound with multiple tones
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => playTone(200 + i*100, 0.3, 'sine', true), i * 150);
+                }
+            }
+            
+            function playWhoosh() {
+                // Whoosh sound for speed changes
+                playTone(50, 0.5, 'sawtooth');
+                setTimeout(() => playTone(200, 0.3, 'sawtooth'), 300);
+            }
+            
+            function playSparkle() {
+                // Sparkle sound for style changes
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => playTone(500 + i*200, 0.2, 'sine'), i * 100);
+                }
+            }
+            
+            function playSuccess() {
+                // Success sound
+                playTone(523.25, 0.1, 'sine'); // C5
+                setTimeout(() => playTone(659.25, 0.1, 'sine'), 100); // E5
+                setTimeout(() => playTone(783.99, 0.2, 'sine'), 200); // G5
+            }
+            
+            // Speed slider
+            speedSlider.addEventListener('input', function() {
+                speedLevel = this.value;
+                speedValue.textContent = speedLevel;
+                speedLevelElem.textContent = speedLevel;
+                
+                // Play speed change sound
+                playWhoosh();
+                
+                // Update animation speed
+                document.documentElement.style.setProperty('--animation-speed', (0.5 / (speedLevel/5)) + 's');
+                
+                // Change animation duration for all elements
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .dancing .head { animation-duration: ${0.5 / (speedLevel/5)}s !important; }
+                    .dancing .body { animation-duration: ${0.5 / (speedLevel/5)}s !important; }
+                    .dancing .leg { animation-duration: ${0.3 / (speedLevel/5)}s !important; }
+                    .dancing .tail { animation-duration: ${0.4 / (speedLevel/5)}s !important; }
+                `;
+                document.head.appendChild(style);
+                
+                // Increase dance count
+                danceCount += 2;
+                
+                // Decrease energy
+                energy -= 2;
+                if (energy < 0) energy = 0;
+                
+                updateStats();
+                
+                // Visual effect
+                catdog.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    catdog.style.transform = 'scale(1)';
+                }, 200);
+            });
+            
+            // Dance style buttons
+            style1Btn.addEventListener('click', function() {
+                setActiveStyle('style1');
+                catdog.classList.remove('dance-style2', 'dance-style3');
+                
+                // Play style change sound
+                playSparkle();
+                
+                danceCount += 3;
+                updateStats();
+            });
+            
+            style2Btn.addEventListener('click', function() {
+                setActiveStyle('style2');
+                catdog.classList.remove('dance-style3');
+                catdog.classList.add('dance-style2');
+                
+                // Play style change sound
+                playSparkle();
+                
+                danceCount += 3;
+                updateStats();
+            });
+            
+            style3Btn.addEventListener('click', function() {
+                setActiveStyle('style3');
+                catdog.classList.remove('dance-style2');
+                catdog.classList.add('dance-style3');
+                
+                // Play style change sound
+                playSparkle();
+                
+                danceCount += 3;
+                updateStats();
+            });
+            
+            function setActiveStyle(style) {
+                currentStyle = style;
+                style1Btn.classList.remove('active');
+                style2Btn.classList.remove('active');
+                style3Btn.classList.remove('active');
+                
+                if (style === 'style1') style1Btn.classList.add('active');
+                if (style === 'style2') style2Btn.classList.add('active');
+                if (style === 'style3') style3Btn.classList.add('active');
+            }
+            
+            // Sound effect buttons
+            meowBtn.addEventListener('click', function() {
+                playMeow();
+                nowPlaying.textContent = "Sound: Meow!";
+                danceCount++;
+                updateStats();
+                
+                // Visual effect
+                catdog.querySelector('.mouth').style.background = '#ff9a00';
+                catdog.querySelector('.mouth').style.height = '15px';
+                setTimeout(() => {
+                    catdog.querySelector('.mouth').style.background = '#000';
+                    catdog.querySelector('.mouth').style.height = '10px';
+                }, 300);
+            });
+            
+            barkBtn.addEventListener('click', function() {
+                playBark();
+                nowPlaying.textContent = "Sound: Bark!";
+                danceCount++;
+                updateStats();
+                
+                // Visual effect
+                catdog.querySelector('.mouth').style.height = '15px';
+                catdog.querySelector('.mouth').style.width = '40px';
+                setTimeout(() => {
+                    catdog.querySelector('.mouth').style.height = '10px';
+                    catdog.querySelector('.mouth').style.width = '30px';
+                }, 300);
+            });
+            
+            danceBtn.addEventListener('click', function() {
+                playDance();
+                nowPlaying.textContent = "Sound: Dance beat!";
+                danceCount += 2;
+                updateStats();
+                
+                // Visual effect
+                startVisualizer();
+                setTimeout(() => {
+                    stopVisualizer();
+                }, 1000);
+            });
+            
+            partyBtn.addEventListener('click', function() {
+                playParty();
+                nowPlaying.textContent = "Sound: Party time!";
+                danceCount += 5;
+                updateStats();
+                
+                // Visual effect
+                const colors = ['#ff5e9a', '#4ecdc4', '#ff9a00', '#6e48aa'];
+                document.querySelectorAll('.disco-light').forEach((light, index) => {
+                    light.style.background = colors[index % colors.length];
+                });
+                
+                setTimeout(() => {
+                    document.querySelector('.disco-light.light1').style.background = '#ff5e9a';
+                    document.querySelector('.disco-light.light2').style.background = '#4ecdc4';
+                    document.querySelector('.disco-light.light3').style.background = '#ff9a00';
+                }, 2000);
+            });
+            
+            // Special feature: Rainbow mode
+            rainbowBtn.addEventListener('click', function() {
+                isRainbowMode = !isRainbowMode;
+                
+                if (isRainbowMode) {
+                    rainbowBtn.style.background = 'linear-gradient(135deg, #ff0000, #ff9900, #ffff00, #00ff00, #0000ff, #9900ff)';
+                    rainbowBtn.style.color = '#000';
+                    startRainbowMode();
+                    playSuccess();
+                    specialPoints += 10;
+                } else {
+                    rainbowBtn.style.background = 'linear-gradient(135deg, #ff6b6b, #4ecdc4)';
+                    rainbowBtn.style.color = '#000';
+                    stopRainbowMode();
+                }
+                
+                updateStats();
+            });
+            
+            function startRainbowMode() {
+                let hue = 0;
+                const rainbowInterval = setInterval(() => {
+                    if (!isRainbowMode) {
+                        clearInterval(rainbowInterval);
+                        return;
+                    }
+                    
+                    document.documentElement.style.setProperty('--animation-speed', (0.5 / (speedLevel/5)) + 's');
+                    
+                    catdog.style.filter = `hue-rotate(${hue}deg)`;
+                    hue = (hue + 2) % 360;
+                }, 50);
+            }
+            
+            function stopRainbowMode() {
+                catdog.style.filter = 'hue-rotate(0deg)';
+            }
+            
+            // Special feature: Morph shape
+            morphBtn.addEventListener('click', function() {
+                // Toggle between normal and morphed state
+                if (catdog.classList.contains('morphed')) {
+                    catdog.classList.remove('morphed');
+                    catdog.querySelector('.head').style.borderRadius = '50%';
+                    catdog.querySelector('.body').style.borderRadius = '40% 40% 20% 20%';
+                    morphBtn.style.background = 'linear-gradient(135deg, #ff6b6b, #4ecdc4)';
+                } else {
+                    catdog.classList.add('morphed');
+                    catdog.querySelector('.head').style.borderRadius = '30%';
+                    catdog.querySelector('.body').style.borderRadius = '20%';
+                    morphBtn.style.background = 'linear-gradient(135deg, #00ff00, #0000ff)';
+                    specialPoints += 5;
+                }
+                
+                playSuccess();
+                updateStats();
+            });
+            
+            // Special feature: Confetti blast
+            confettiBtn.addEventListener('click', function() {
+                createConfetti();
+                playParty();
+                specialPoints += 15;
+                updateStats();
+            });
+            
+            function createConfetti() {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = (5 + Math.random() * 10) + 'px';
+                    confetti.style.height = (5 + Math.random() * 10) + 'px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    const animation = confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: 1000 + Math.random() * 3000,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.1, 1)'
+                    });
+                    
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }
+            }
+            
+            // Special feature: Voice control
+            voiceBtn.addEventListener('click', function() {
+                voiceControl.style.display = voiceControl.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            startVoiceBtn.addEventListener('click', function() {
+                if (isVoiceActive) {
+                    recognition.stop();
+                    isVoiceActive = false;
+                    startVoiceBtn.textContent = 'Start Voice Control';
+                    voiceStatus.textContent = 'Voice control: Off';
+                } else {
+                    try {
+                        recognition.start();
+                        isVoiceActive = true;
+                        startVoiceBtn.textContent = 'Stop Voice Control';
+                        voiceStatus.textContent = 'Voice control: On - Speak now!';
+                        specialPoints += 20;
+                        updateStats();
+                    } catch (e) {
+                        voiceStatus.textContent = 'Error starting voice recognition';
+                    }
+                }
+            });
+            
+            // Special feature: Record dance (simulated)
+            recordBtn.addEventListener('click', function() {
+                // Simulate recording
+                recordBtn.textContent = '📀 Recording...';
+                playSuccess();
+                
+                setTimeout(() => {
+                    recordBtn.textContent = '📀 Record Dance';
+                    nowPlaying.textContent = 'Dance recorded!';
+                    specialPoints += 25;
+                    updateStats();
+                }, 2000);
+            });
+            
+            // Visualizer functions
+            function startVisualizer() {
+                stopVisualizer();
+                
+                visualizerInterval = setInterval(() => {
+                    visualizerBars.forEach(bar => {
+                        const height = Math.floor(Math.random() * 80) + 5;
+                        bar.style.height = `${height}px`;
+                        
+                        // Change color based on height
+                        if (height > 60) {
+                            bar.style.background = '#ff5e9a';
+                        } else if (height > 30) {
+                            bar.style.background = '#ff9a00';
+                        } else {
+                            bar.style.background = '#4ecdc4';
+                        }
+                    });
+                }, 100);
+            }
+            
+            function stopVisualizer() {
+                clearInterval(visualizerInterval);
+                visualizerBars.forEach(bar => {
+                    bar.style.height = '5px';
+                    bar.style.background = '#ff9a00';
+                });
+            }
+            
+            // Energy recharge over time
+            setInterval(() => {
+                if (energy < 100) {
+                    energy += 0.5;
+                    if (energy > 100) energy = 100;
+                    updateStats();
+                }
+            }, 1000);
+            
+            // Dance count increases over time
+            setInterval(() => {
+                danceCount++;
+                updateStats();
+            }, 3000);
+            
+            // Update statistics display
+            function updateStats() {
+                danceCountElem.textContent = danceCount;
+                energyElem.textContent = Math.round(energy) + '%';
+                specialPointsElem.textContent = specialPoints;
+                
+                // Change energy color based on level
+                if (energy > 70) {
+                    energyElem.style.color = '#4caf50';
+                } else if (energy > 30) {
+                    energyElem.style.color = '#ff9a00';
+                } else {
+                    energyElem.style.color = '#ff5252';
+                }
+            }
+            
+            // Add some random movement to disco lights
+            setInterval(() => {
+                const lights = document.querySelectorAll('.disco-light');
+                lights.forEach(light => {
+                    light.style.left = Math.random() * 80 + '%';
+                    light.style.top = Math.random() * 80 + '%';
+                });
+            }, 3000);
+            
+            // Make CatDog dance randomly occasionally
+            setInterval(() => {
+                catdog.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    catdog.style.transform = 'scale(1)';
+                }, 200);
+            }, 5000);
+            
+            // First time user interaction to start audio context
+            document.body.addEventListener('click', function initOnClick() {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        console.log('Audio context resumed successfully');
+                        nowPlaying.textContent = "Audio ready! Press sound buttons!";
+                    });
+                }
+                document.body.removeEventListener('click', initOnClick);
+            }, { once: true });
+        });
+    </script>
+</body>
+</html>
